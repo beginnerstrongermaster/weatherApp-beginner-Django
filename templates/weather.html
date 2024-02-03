@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block body %}
+    {{ data }}
+     <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    What's the weather like?
+                </h1>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-offset-4 is-4">
+                    <form method="POST" action="{% url "weather" %}">
+                        {% csrf_token %}
+                        <div class="field has-addons">
+                            <div class="control is-expanded">
+                                <input name="city_name" class="input" type="text" placeholder="City Name">
+                            </div>
+                            <div class="control">
+                                <button class="button is-info">
+                                    Add City
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+        <section class="section">
+            <div class="container">
+                <div class="columns">
+                    <div class="column is-offset-4 is-4">
+                        {% for data in weather_data %}
+                        <div class="box">
+                            <article class="media">
+                                <div class="media-left">
+                                    <figure class="image is-50x50">
+                                        <img src="http://openweathermap.org/img/w/{{ data.icon }}.png" alt="Image">
+                                    </figure>
+                                </div>
+                                <div class="media-content">
+                                    <div class="content">
+                                        <div class="cancel">
+                                            <form action="{% url "weather-delete" data.id%}" method="POST">
+                                                {% csrf_token %}
+                                                <input class="cancel-btn" type="submit" value="&#128473">
+                                            </form>
+                                        </div>
+                                        <p>
+                                            <span class="title">{{ data.city }}</span>
+                                            <br>
+                                            <span class="subtitle">{{ data.temp }}° C</span>
+                                            <br> {{ data.description }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+    <footer class="footer">
+    </footer>
+{% endblock %}
